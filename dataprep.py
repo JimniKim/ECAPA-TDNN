@@ -50,11 +50,12 @@ def download(args, lines):
     for line in lines:
         url     = line.split()[0]
         md5gt     = line.split()[1]
-        outfile = url.split('/')[-1]
+        #outfile = url.split('/')[-1]
+        outfile = "voxceleb1"
 
         ## Download files
-        #out     = subprocess.call('wget %s --user %s --password %s -O %s/%s'%(url,args.user,args.password,args.save_path,outfile), shell=True)
-        out     = subprocess.call('wget --no-check-certificate %s -O %s/%s'%(url,args.save_path,outfile), shell=True)
+        out     = subprocess.call('wget %s --user %s --password %s -O %s/%s'%(url,args.user,args.password,args.save_path,outfile), shell=True)
+        #out     = subprocess.call('wget --no-check-certificate %s -O %s/%s'%(url,args.save_path,outfile), shell=True)
         if out != 0:
             raise ValueError('Download failed %s. If download fails repeatedly, use alternate URL on the VoxCeleb website.'%url)
 
