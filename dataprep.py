@@ -172,7 +172,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.save_path):
         raise ValueError('Target directory does not exist.')
 
-    f = open('lists/fileparts.txt','r')
+    f = open('lists/fileparts1.txt','r')
     fileparts = f.readlines()
     f.close()
 
