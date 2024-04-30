@@ -62,12 +62,23 @@ def ComputeErrorRates(scores, labels):
 
       # Now divide by the total number of false negative errors to
       # obtain the false positive rates across all thresholds
-      fnrs = [x / float(fnrs_norm) for x in fnrs]
+      #fnrs = [x / float(fnrs_norm) for x in fnrs] #original code..
+      if fnrs_norm != 0:
+        fnrs = [x / float(fnrs_norm) for x in fnrs]
+      else:
+        fnrs = [x for x in fnrs]
+        print ("ComputeErrorRates: fnrs=0!")
 
       # Divide by the total number of corret positives to get the
       # true positive rate.  Subtract these quantities from 1 to
       # get the false positive rates.
-      fprs = [1 - x / float(fprs_norm) for x in fprs]
+      #fprs = [1 - x / float(fprs_norm) for x in fprs] #original code..
+      if fprs_norm != 0:
+        fprs = [1 - x / float(fprs_norm) for x in fprs]
+      else:
+        fprs = [1 - x for x in fprs]
+        print ("ComputeErrorRates: fprs=0!")
+
       return fnrs, fprs, thresholds
 
 # Computes the minimum of the detection cost function.  The comments refer to
