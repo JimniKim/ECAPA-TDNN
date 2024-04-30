@@ -84,7 +84,15 @@ def ComputeMinDcf(fnrs, fprs, thresholds, p_target, c_miss, c_fa):
             min_c_det_threshold = thresholds[i]
     # See Equations (3) and (4).  Now we normalize the cost.
     c_def = min(c_miss * p_target, c_fa * (1 - p_target))
-    min_dcf = min_c_det / c_def
+
+    # min_dcf = min_c_det / c_def # original code 
+    if c_def!=0 :
+        min_dcf = min_c_det / c_def
+    else:
+        min_dcf = min_c_det
+        print ("ComputeMinDcf: c_def=0!")
+
+    
     return min_dcf, min_c_det_threshold
 
 def accuracy(output, target, topk=(1,)):
