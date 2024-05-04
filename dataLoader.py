@@ -4,6 +4,7 @@ DataLoader for training
 
 import glob, numpy, os, random, soundfile, torch
 from scipy import signal
+from WavLM import WavLM, WavLMConfig
 
 class train_loader(object):
 	def __init__(self, train_list, train_path, musan_path, rir_path, num_frames, **kwargs):
@@ -43,6 +44,32 @@ class train_loader(object):
 		start_frame = numpy.int64(random.random()*(audio.shape[0]-length))
 		audio = audio[start_frame:start_frame + length]
 		audio = numpy.stack([audio],axis=0)
+
+		#Instead of Data Augmentation, we use WavLM
+  
+		checkpoint = torch.load('/path/to/wavlm.pt')
+		cfg = WavLMConfig(checkpoint['cfg'])
+		model = WavLM(cfg)
+		model.load_state_dict(checkpoint['model'])
+		model.eval()
+
+		# extract the representation of last layer
+		wav_input_16khz = torch.randn(1,10000)
+		if cfg.normalize:
+			wav_input_16khz = torch.nn.functional.layer_norm(wav_input_16khz , wav_input_16khz.shape)
+		rep = model.extract_features(wav_input_16khz)[0]
+
+		# extract the representation of each layer
+		wav_input_16khz = torch.randn(1,10000)
+		if cfg.normalize:
+			wav_input_16khz = torch.nn.functional.layer_norm(wav_input_16khz , wav_input_16khz.shape)
+		rep, layer_results = model.extract_features(wav_input_16khz, output_layer=model.cfg.encoder_layers, ret_layer_results=True)[0]
+		layer_reps = [x.transpose(0, 1) for x, _ in layer_results]
+		
+
+		return torch.FloatTensor(audio[0]), self.data_label[index]
+
+
 		# Data Augmentation
 		augtype = random.randint(0,5)
 		if augtype == 0:   # Original
