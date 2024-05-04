@@ -43,6 +43,13 @@ class train_loader(object):
 		start_frame = numpy.int64(random.random()*(audio.shape[0]-length))
 		audio = audio[start_frame:start_frame + length]
 		audio = numpy.stack([audio],axis=0)
+
+
+		#Instead of Data Augmentation, we will use wavLM
+	
+		
+
+
 		# Data Augmentation
 		augtype = random.randint(0,5)
 		if augtype == 0:   # Original
